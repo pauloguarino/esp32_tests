@@ -14,8 +14,7 @@
 void toggle_led_isr();
 void timer_isr();
 
-float i = 0;
-volatile bool led_state = false;
+volatile bool esp32_led_state = false;
 volatile unsigned long button_press_time = 0;
 volatile unsigned long last_button_press_time = 0;
 hw_timer_t *yellow_led_timer = NULL;
@@ -35,12 +34,12 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  if(led_state){
-    led_state = false;
+  if(esp32_led_state){
+    esp32_led_state = false;
     digitalWrite(ESP32_LED, LOW);
     Serial.println("Low");
   }else{
-    led_state = true;
+    esp32_led_state = true;
     digitalWrite(ESP32_LED, HIGH);
     Serial.println("High");
   }
@@ -55,11 +54,11 @@ void IRAM_ATTR toggle_led_isr(){
     }else{
       timerAlarmEnable(yellow_led_timer);
     }
-    if(led_state){
-      led_state = false;
+    if(esp32_led_state){
+      esp32_led_state = false;
       digitalWrite(ESP32_LED, LOW);
     }else{
-      led_state = true;
+      esp32_led_state = true;
       digitalWrite(ESP32_LED, HIGH);
     }
     last_button_press_time = button_press_time;
